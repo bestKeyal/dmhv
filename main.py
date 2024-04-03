@@ -156,10 +156,10 @@ if __name__ == '__main__':
         model_checkpoint = ModelCheckpoint(str(Path(SaveDir, 'unet_CV' + str(cvI) + '.keras')),
                                            monitor='val_jaccard_loss', mode='min',
                                            verbose=1, save_best_only=True, save_freq=NumEpochEval)
-        history1 = modelUnet.fit_generator(trainGener, epochs=NumEpochs,
-                                           steps_per_epoch=int(n_imagesTrain / batch_size),
-                                           validation_data=valGener, validation_steps=n_imagesValidate,
-                                           callbacks=[model_checkpoint])
+        history1 = modelUnet.fit(trainGener, epochs=NumEpochs,
+                                 steps_per_epoch=int(n_imagesTrain / batch_size),
+                                 validation_data=valGener, validation_steps=n_imagesValidate,
+                                 callbacks=[model_checkpoint])
 
         with open(str(Path(SaveDir, 'history_CV' + str(cvI) + '.pkl')), 'wb') as Results:  # Python 3: open(..., 'wb')
             pickle.dump(
@@ -203,19 +203,19 @@ if __name__ == '__main__':
                             j * imageLen / (num_Moves + 1) + windowLen)] = CTslicePredict[
                                                                            int(i * imageLen / (num_Moves + 1)):int(
                                                                                i * imageLen / (
-                                                                                           num_Moves + 1) + windowLen),
+                                                                                       num_Moves + 1) + windowLen),
                                                                            int(j * imageLen / (num_Moves + 1)):int(
                                                                                j * imageLen / (
-                                                                                           num_Moves + 1) + windowLen)] + windowI
+                                                                                       num_Moves + 1) + windowLen)] + windowI
                         windowOcc[int(i * imageLen / (num_Moves + 1)):int(i * imageLen / (num_Moves + 1) + windowLen),
                         int(j * imageLen / (num_Moves + 1)):int(
                             j * imageLen / (num_Moves + 1) + windowLen)] = windowOcc[
                                                                            int(i * imageLen / (num_Moves + 1)):int(
                                                                                i * imageLen / (
-                                                                                           num_Moves + 1) + windowLen),
+                                                                                       num_Moves + 1) + windowLen),
                                                                            int(j * imageLen / (num_Moves + 1)):int(
                                                                                j * imageLen / (
-                                                                                           num_Moves + 1) + windowLen)] + 1
+                                                                                       num_Moves + 1) + windowLen)] + 1
                         counterCrop = counterCrop + 1
                 CTslicePredict = CTslicePredict / windowOcc * 255
                 img = np.uint8(CTslicePredict)
