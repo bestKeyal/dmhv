@@ -54,8 +54,9 @@ def unet(pretrained_weights = None,input_size = (128,128,1),learningRate=1e-5,de
 
     model = Model(inputs = ModInputs, outputs = conv10)
 
-    model.compile(optimizer = Adam(lr = learningRate,decay=decayRate), loss = 'binary_crossentropy', metrics=['accuracy', jaccard_loss])
-    
+    model.compile(optimizer=Adam(learning_rate=learningRate, decay=decayRate), loss='binary_crossentropy',
+                  metrics=['accuracy', jaccard_loss])
+
     #model.summary()
 
     if(pretrained_weights):
