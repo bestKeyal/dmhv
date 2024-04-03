@@ -87,7 +87,7 @@ data_gen_args = dict(
 if __name__ == '__main__':
     #############################################Training Parameters#######################################################
     num_CV = 5
-    NumEpochs = 100
+    NumEpochs = 1
     NumEpochEval = 1  # validated the model each NumEpochEval epochs
     batch_size = 32
     learning_rateI = 1e-5
@@ -104,7 +104,6 @@ if __name__ == '__main__':
     window_specs = [40, 120]  # Brain window
     kernel_closing = np.ones((10, 10), np.uint8)
     kernel_opening = np.ones((5, 5), np.uint8)  # 5*5 in order not to delete thin hemorrhage
-
     counterI = 1;
     SaveDir = Path('results_trial' + str(counterI))
     while (os.path.isdir(str(SaveDir))):
@@ -133,6 +132,8 @@ if __name__ == '__main__':
     ############################################Cross-validation############################################################
     print('Starting the cross-validation!!')
     for cvI in range(0, num_CV):
+        save_model_path = str(Path(SaveDir, 'unet_CV' + str(cvI) + '.keras'))
+
         print("Working on fold #" + str(cvI) + ", starting training U-Net")
         SaveDir_crops_cv = Path(SaveDir, 'crops', 'CV' + str(cvI))
         if os.path.isdir(str(SaveDir_crops_cv)) == False:
@@ -153,7 +154,7 @@ if __name__ == '__main__':
         valGener = validateGenerator(batch_size, str(Path(dataDir, 'validate')), 'image', 'label', save_to_dir=None,
                                      target_size=(128, 128))
         modelUnet = unet(learningRate=learning_rateI, decayRate=decayI, input_size=(windowLen, windowLen, 1))
-        model_checkpoint = ModelCheckpoint(str(Path(SaveDir, 'unet_CV' + str(cvI) + '.keras')),
+        model_checkpoint = ModelCheckpoint(save_model_path,
                                            monitor='val_jaccard_loss', mode='min',
                                            verbose=1, save_best_only=True, save_freq=NumEpochEval)
         history1 = modelUnet.fit(trainGener, epochs=NumEpochs,
@@ -167,7 +168,7 @@ if __name__ == '__main__':
 
         # Loading and testing the model with lowest validation loss
         print('Testing the best U-Net model on testing data and saving the results to: ' + str(SaveDir_crops_cv))
-        testModel(str(Path(SaveDir, 'unet_CV' + str(cvI) + '.hdf5')), str(Path(dataDir, 'test', 'crops', 'image')),
+        testModel(save_model_path, str(Path(dataDir, 'test', 'crops', 'image')),
                   str(SaveDir_crops_cv))
 
         # Creating full image mask from the crops predictions
