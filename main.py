@@ -153,7 +153,7 @@ if __name__=='__main__':
         valGener = validateGenerator(batch_size,str(Path(dataDir,'validate')), 'image', 'label', save_to_dir=None, target_size = (128,128))
         modelUnet = unet(learningRate=learning_rateI,decayRate=decayI, input_size =(windowLen,windowLen,1) )
         model_checkpoint = ModelCheckpoint(str(Path(SaveDir,'unet_CV'+str(cvI)+'.hdf5')), monitor='val_jaccard_loss', mode='min',
-                                           verbose=1, save_best_only=True, period=NumEpochEval)
+                                           verbose=1, save_best_only=True, save_freq=NumEpochEval)
         history1=modelUnet.fit_generator(trainGener,epochs=NumEpochs,steps_per_epoch=int(n_imagesTrain/batch_size),
                                         validation_data=valGener,validation_steps=n_imagesValidate,callbacks=[model_checkpoint])
 
