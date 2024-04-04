@@ -69,7 +69,7 @@ def dice_fun(im1, im2):
 def testModel(model_path, test_path, save_path):
     modelUnet = unet(pretrained_weights=model_path, input_size=(windowLen, windowLen, 1))
     testGener = testGenerator(test_path, target_size=(windowLen, windowLen, 1))
-    testPredictions = modelUnet.predict_generator(testGener, n_imagesTest, verbose=1)
+    testPredictions = modelUnet.predict(testGener, n_imagesTest, verbose=1)
     saveResult(test_path, save_path,
                testPredictions)  # sending the test image path so same name will be used for saving masks
 
@@ -87,7 +87,7 @@ data_gen_args = dict(
 if __name__ == '__main__':
     #############################################Training Parameters#######################################################
     num_CV = 5
-    NumEpochs = 2
+    NumEpochs = 1
     NumEpochEval = 1  # validated the model each NumEpochEval epochs
     batch_size = 32
     learning_rateI = 1e-5
