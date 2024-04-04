@@ -63,7 +63,7 @@ def prepare_data(dataset_zip_dir, crossvalid_dir, numSubj, imageLen, windowLen, 
             os.mkdir(crossvalid_dir)
 
         #Load the dataset
-        if os.path.exists(dataset_zip_dir)==True:
+        if os.path.exists(dataset_zip_dir)==True or os.path.exists(str(datasetDir))==True:
             if os.path.exists(str(datasetDir))==True:
                 print("The dataset is already unzipped!")
             else:
