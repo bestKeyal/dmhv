@@ -105,11 +105,11 @@ def testGenerator(test_path, target_size = (128,128),flag_multi_class = False,as
     for index, item in enumerate(image_name_arr):
         img = imread(item)
         img = img / 255
-        if img.shape[0]!=target_size[0]|img.shape[1]!=target_size[1]:
+        if img.shape[0]!=target_size[0] or img.shape[1]!=target_size[1]:
             img = trans.resize(img, target_size)
         img = np.reshape(img, img.shape + (1,)) if (not flag_multi_class) else img
         img = np.reshape(img, (1,) + img.shape)
-        yield img
+        yield (img,)
 
 
 def geneTrainNpy(image_path,mask_path,flag_multi_class = False,num_class = 2,image_prefix = "image",mask_prefix = "mask",image_as_gray = True,mask_as_gray = True):
